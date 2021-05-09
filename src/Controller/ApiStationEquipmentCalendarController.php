@@ -29,6 +29,9 @@ class ApiStationEquipmentCalendarController extends AbstractController
 
         // var_dump($calendar['Munich']->getCollection()['2021-05-09']);
 
+        // Issue https://github.com/symfony/symfony/issues/37334 still unresolved
+        // The problem can be solved by creating normalizers for your entities.
+        // TODO: create normalizer for the Equipment class
         return $this->json($calendar);
     }
 }
