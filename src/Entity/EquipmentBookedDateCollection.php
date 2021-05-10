@@ -11,6 +11,9 @@ class EquipmentBookedDateCollection
         $this->dateIndex = [];
     }
 
+    /*
+     * adjusts aggregated amounts per equipment
+     */
     public function add(\DateTimeInterface $date, EquipmentBookedDate $equipmentChange)
     {
         $dt = $date->format('Y-m-d');
@@ -19,7 +22,7 @@ class EquipmentBookedDateCollection
         $this->amounts[$equipmentChange->getEquipment()->getId()] += $equipmentChange->getBooked();
     }
 
-    public function getCollection()
+    public function getCollection(): array
     {
         return $this->dateIndex;
     }
@@ -34,7 +37,7 @@ class EquipmentBookedDateCollection
     /*
      * returns Booked Equipment
      */
-    public function generateNextBookedDate($stationEquipment)
+    public function generateNextEquipmentBookedDate($stationEquipment): EquipmentBookedDate
     {
         $equipment = $stationEquipment->getEquipment();
         $new = new EquipmentBookedDate();

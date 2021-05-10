@@ -62,7 +62,7 @@ class EquipmentAvailabilityRepository extends ServiceEntityRepository
         return $result;
     }
 
-    private function findChangesByStationAggregated($station)
+    public function findChangesByStationAggregated($station)
     {
         return $this->createQueryBuilder('equipment_availability')
             ->addSelect('SUM(equipment_availability.bookingAmount) AS bookingAggregate')

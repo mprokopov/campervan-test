@@ -3,22 +3,16 @@
 namespace App\Entity;
 
 use App\Entity\Equipment;
-use Symfony\Component\Serializer\Annotation\Ignore;
 
 class EquipmentBookedDate
 {
-    /*
-     * @Ignore()
-     */
     private Equipment $equipment;
     private int $available;
     private int $booked;
-    private int $change;
 
     public function __construct()
     {
         $this->booked = 0;
-        $this->change = 0;
         $this->available = 0;
     }
 
@@ -30,7 +24,6 @@ class EquipmentBookedDate
     public function setBooked(int $booked)
     {
         $this->booked = $booked;
-
         $this->available += $booked;
     }
 
@@ -52,11 +45,6 @@ class EquipmentBookedDate
         return $this->booked;
     }
 
-    public function getChange()
-    {
-        return $this->change;
-    }
-
     public function getAvailable()
     {
         return $this->available;
@@ -65,13 +53,6 @@ class EquipmentBookedDate
     public function getEquipment()
     {
         return $this->equipment;
-    }
-
-    public function updateByEquipmentAvailabilityChange(int $equipmentChange)
-    {
-        $this->booked = $equipmentChange;
-        $this->change += $equipmentChange;
-        $this->available += $this->change;
     }
 
     public function isEnough(int $amount): bool

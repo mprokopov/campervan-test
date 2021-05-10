@@ -7,6 +7,7 @@ use App\Entity\EquipmentBookedDate;
 use App\Entity\EquipmentBookedDateCollection;
 use App\Repository\EquipmentAvailabilityRepository;
 use Symfony\Component\Serializer\Annotation\Ignore;
+use App\Service\AggregatetedEquipmentAmountCache;
 
 class GenerateEquipmentCalendarService
 {
@@ -34,29 +35,24 @@ class GenerateEquipmentCalendarService
     }
 
     /*
-     * iterates over each day in dateRange and sets changed and availability value
-     * uses StationEquipment initial values as basis
+     * populates EquipmentBookedDateCollection with EquipmentBookedDate
      */
     public function call(): void
     {
-        $cache=$this->equipmentAvailabilityRepo->aggregatedCache($this->station);
+        $cache = new AggregatetedEquipmentAmountCache($this->equipmentAvailabilityRepo);
+        $cache->populate($this->station);
 
         $this->collection->setInitialAmounts($this->station->getStationEquipment());
 
         foreach ($this->dateRange as $date) {
-            foreach ($this->station->getStationEquipment() as $equipment) {
-                $bookedDate = $this->collection->generateNextBookedDate($equipment);
+            foreach ($this->station->getStationEquipment() as $stationEquipment) {
+                $equipmentBookedDate = $this->collection->generateNextEquipmentBookedDate($stationEquipment);
 
-                $change = 0;
+                $amount = $cache->findByDateAndEquipment($date, $stationEquipment);
 
-                $id = $equipment->getEquipment()->getId();
-                $dt = $date->format('Y-m-d');
-                if (array_key_exists($dt, $cache) && array_key_exists($id, $cache[$dt])) {
-                    $change = $cache[$dt][$id];
-                }
+                $equipmentBookedDate->setBooked($amount);
 
-                $bookedDate->setBooked($change);
-                $this->collection->add($date, $bookedDate);
+                $this->collection->add($date, $equipmentBookedDate);
             }
         }
     }

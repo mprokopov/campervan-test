@@ -12,11 +12,11 @@
     from {{calendar.dateRange.start.format('Y-m-d')}}
     to {{calendar.dateRange.end.format('Y-m-d')}} </h2>
     <table>
-    {% for day,values in calendar.Calendar.Collection %}
+    {% for day,equipments in calendar.Calendar.Collection %}
         <tr>
             <td> {{day}} </td>
 
-            {% for equipment in values %}
+            {% for equipment in equipments %}
                 <td>
                     <b>{{equipment.equipment.name}}</b>
                     chanaged {{equipment.booked}}

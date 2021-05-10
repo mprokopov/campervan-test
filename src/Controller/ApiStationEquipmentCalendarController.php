@@ -24,7 +24,7 @@ class ApiStationEquipmentCalendarController extends AbstractController
         foreach ($stations as $station) {
             $stationCalendar = new GenerateEquipmentCalendarService($station, null, $end, $availabilityRepo);
             $stationCalendar->call();
-            $calendar[$station->getLocation()] = $stationCalendar->getCalendar2();
+            $calendar[$station->getLocation()] = $stationCalendar->getCalendar();
         }
 
         // var_dump($calendar['Munich']->getCollection()['2021-05-09']);
