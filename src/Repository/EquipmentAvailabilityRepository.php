@@ -48,7 +48,21 @@ class EquipmentAvailabilityRepository extends ServiceEntityRepository
     }
     */
 
-    public function findAllByStationAggregated($station)
+    /*
+     * returns findAllByStationAggregated indexed by date and equipmentId
+     */
+    public function aggregatedCache($station): array
+    {
+        $result =  [];
+        foreach($this->findChangesByStationAggregated($station) as $item) {
+            $record = $item[0];
+            $change = $item['bookingAggregate'];
+            $result[$record->getBookingDate()->format('Y-m-d')][$record->getEquipment()->getId()] = $change;
+        }
+        return $result;
+    }
+
+    private function findChangesByStationAggregated($station)
     {
         return $this->createQueryBuilder('equipment_availability')
             ->addSelect('SUM(equipment_availability.bookingAmount) AS bookingAggregate')

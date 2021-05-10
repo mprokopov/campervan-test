@@ -3,16 +3,12 @@ namespace App\Entity;
 
 class EquipmentBookedDateCollection
 {
-    /*
-     * @Ignore()
-     */
     private array $dateIndex;
-    // private $equipmentIndex;
+    private array $amounts; // keeps tracking on amount
 
     public function __construct()
     {
         $this->dateIndex = [];
-        // $this->equipmentIndex = [];
     }
 
     public function add(\DateTimeInterface $date, EquipmentBookedDate $equipmentChange)
@@ -20,12 +16,31 @@ class EquipmentBookedDateCollection
         $dt = $date->format('Y-m-d');
         $id =$equipmentChange->getEquipment()->getId();
         $this->dateIndex[$dt][$id] = $equipmentChange;
-        // $this->equipmentIndex[$equipmentChange->getEquipment()->getId()] []= $dt;
+        $this->amounts[$equipmentChange->getEquipment()->getId()] += $equipmentChange->getBooked();
     }
 
     public function getCollection()
     {
         return $this->dateIndex;
+    }
+
+    public function setInitialAmounts($items)
+    {
+        foreach ($items as $item) {
+            $this->amounts[$item->getEquipment()->getId()] = $item->getAmount();
+        }
+    }
+
+    /*
+     * returns Booked Equipment
+     */
+    public function generateNextBookedDate($stationEquipment)
+    {
+        $equipment = $stationEquipment->getEquipment();
+        $new = new EquipmentBookedDate();
+        $new->setEquipment($equipment);
+        $new->setAvailable($this->amounts[$equipment->getId()]);
+        return $new;
     }
 
     public function findByDateAndEquipment($date, $equipment): ?EquipmentBookedDate

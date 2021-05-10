@@ -12,9 +12,10 @@
     from {{calendar.dateRange.start.format('Y-m-d')}}
     to {{calendar.dateRange.end.format('Y-m-d')}} </h2>
     <table>
-    {% for day,values in calendar.getCalendar %}
+    {% for day,values in calendar.Calendar.Collection %}
         <tr>
             <td> {{day}} </td>
+
             {% for equipment in values %}
                 <td>
                     <b>{{equipment.equipment.name}}</b>

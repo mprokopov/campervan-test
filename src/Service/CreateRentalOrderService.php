@@ -114,7 +114,7 @@ class CreateRentalOrderService {
             $calendar = new GenerateEquipmentCalendarService($startStation, null, $endDate, $this->equipmentAvailabilityRepo);
             $calendar->call();
 
-            $availability = $calendar->getCalendar2();
+            $availability = $calendar->getCalendar();
 
             if(! $availability->findByDateAndEquipment($startDate, $equipment)->isEnough($amount)){
                 throw new \InvalidArgumentException("Not enough estimated equipment on the required date");

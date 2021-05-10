@@ -13,6 +13,14 @@ class EquipmentBookedDate
     private Equipment $equipment;
     private int $available;
     private int $booked;
+    private int $change;
+
+    public function __construct()
+    {
+        $this->booked = 0;
+        $this->change = 0;
+        $this->available = 0;
+    }
 
     public function setAvailable(int $amount)
     {
@@ -22,6 +30,8 @@ class EquipmentBookedDate
     public function setBooked(int $booked)
     {
         $this->booked = $booked;
+
+        $this->available += $booked;
     }
 
     public function setEquipment(Equipment $equipment)
@@ -33,13 +43,18 @@ class EquipmentBookedDate
     {
         $new = new self;
         $new->setAvailable($equipment->getAmount());
-        $new->setBooked(0);
         $new->setEquipment($equipment->getEquipment());
         return $new;
     }
+
     public function getBooked()
     {
         return $this->booked;
+    }
+
+    public function getChange()
+    {
+        return $this->change;
     }
 
     public function getAvailable()
@@ -47,9 +62,6 @@ class EquipmentBookedDate
         return $this->available;
     }
 
-    /*
-     * @Ignore()
-     */
     public function getEquipment()
     {
         return $this->equipment;
@@ -57,8 +69,9 @@ class EquipmentBookedDate
 
     public function updateByEquipmentAvailabilityChange(int $equipmentChange)
     {
-        $this->booked += $equipmentChange;
-        $this->available += $this->booked;
+        $this->booked = $equipmentChange;
+        $this->change += $equipmentChange;
+        $this->available += $this->change;
     }
 
     public function isEnough(int $amount): bool
