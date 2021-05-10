@@ -32,7 +32,7 @@ class EquipmentBookedDate
         $this->equipment = $equipment;
     }
 
-    public static function fromStationEquipment($equipment)
+    public static function fromStationEquipment($equipment): EquipmentBookedDate
     {
         $new = new self;
         $new->setAvailable($equipment->getAmount());
@@ -40,17 +40,17 @@ class EquipmentBookedDate
         return $new;
     }
 
-    public function getBooked()
+    public function getBooked(): int
     {
         return $this->booked;
     }
 
-    public function getAvailable()
+    public function getAvailable(): int
     {
         return $this->available;
     }
 
-    public function getEquipment()
+    public function getEquipment(): Equipment
     {
         return $this->equipment;
     }

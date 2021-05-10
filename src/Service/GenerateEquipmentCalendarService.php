@@ -11,11 +11,10 @@ use App\Service\AggregatetedEquipmentAmountCache;
 
 class GenerateEquipmentCalendarService
 {
-    private $station;
-    private $collection;
-    private $dateRange;
-    private $initialEquipment;
-    private $equipmentAvailabilityRepo;
+    private EquipmentBookedDateCollection $collection;
+    private Station $station;
+    private \DatePeriod $dateRange;
+    private EquipmentAvailabilityRepository $equipmentAvailabilityRepo;
 
     public function __construct(Station $station,
                                 ?\DateTimeInterface $start,
@@ -30,8 +29,6 @@ class GenerateEquipmentCalendarService
 
         $interval = new \DateInterval('P1D');
         $this->dateRange = new \DatePeriod($start, $interval, $end);
-        $this->initialEquipment = $station->getStationEquipment();
-        $this->equipment = $station->getEquipmentAvailabilities();
     }
 
     /*
