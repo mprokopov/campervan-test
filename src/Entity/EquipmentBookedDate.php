@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Equipment;
+use App\Entity\StationEquipment;
 
 class EquipmentBookedDate
 {
@@ -32,7 +33,7 @@ class EquipmentBookedDate
         $this->equipment = $equipment;
     }
 
-    public static function fromStationEquipment($equipment): EquipmentBookedDate
+    public static function fromStationEquipment(StationEquipment $equipment): EquipmentBookedDate
     {
         $new = new self;
         $new->setAvailable($equipment->getAmount());

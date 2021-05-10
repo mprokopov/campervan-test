@@ -3,28 +3,29 @@ namespace App\Entity;
 
 class EquipmentBookedDateCollection
 {
-    private array $dateIndex;
+    private array $collection;
     private array $amounts; // keeps tracking on amount
 
     public function __construct()
     {
-        $this->dateIndex = [];
+        $this->collection = [];
+        $this->amounts = [];
     }
 
     /*
      * adjusts aggregated amounts per equipment
      */
-    public function add(\DateTimeInterface $date, EquipmentBookedDate $equipmentChange)
+    public function add(\DateTimeInterface $date, EquipmentBookedDate $equipmentBookedDate)
     {
         $dt = $date->format('Y-m-d');
-        $id =$equipmentChange->getEquipment()->getId();
-        $this->dateIndex[$dt][$id] = $equipmentChange;
-        $this->amounts[$equipmentChange->getEquipment()->getId()] += $equipmentChange->getBooked();
+        $id = $equipmentBookedDate->getEquipment()->getId();
+        $this->collection[$dt][$id] = $equipmentBookedDate;
+        $this->amounts[$equipmentBookedDate->getEquipment()->getId()] += $equipmentBookedDate->getBooked();
     }
 
     public function getCollection(): array
     {
-        return $this->dateIndex;
+        return $this->collection;
     }
 
     public function setInitialAmounts($items)
@@ -46,12 +47,17 @@ class EquipmentBookedDateCollection
         return $new;
     }
 
+    public function getAmounts(): array
+    {
+        return $this->amounts;
+    }
+
     public function findByDateAndEquipment($date, $equipment): ?EquipmentBookedDate
     {
         $dt = $date->format('Y-m-d');
         $id = $equipment->getId();
         try {
-            $found = $this->dateIndex[$dt][$id];
+            $found = $this->collection[$dt][$id];
             return $found;
         } catch (\ErrorException $ex) {
             throw new \InvalidArgumentException("Item $id doesn't have initial stock at the station");
